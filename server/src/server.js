@@ -72,6 +72,27 @@ const io = new Server(server, {
 // connecté à l'instance B → c'est le point n°1 qui casse le "temps réel"
 // en prod à grande échelle.
 async function setupRedisAdapter() {
+
+  const redisUrl = process.env.REDIS_URL;
+
+  console.log('REDIS_URL =', redisUrl);
+
+  const pubClient = createClient({
+    url: redisUrl,
+  });
+
+  pubClient.on('error', (err) => {
+    console.error('REDIS ERROR:', err);
+  });
+
+  pubClient.on('connect', () => {
+    console.log('REDIS CONNECT');
+  });
+
+  pubClient.on('ready', () => {
+    console.log('REDIS READY');
+  });
+
   if (!process.env.REDIS_HOST) {
     logger.warn('REDIS_HOST non défini — adapter Redis désactivé (mono-instance uniquement)');
     return;
