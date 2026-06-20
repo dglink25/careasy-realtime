@@ -77,15 +77,15 @@ async function setupRedisAdapter() {
     return;
   }
   try {
-    const redisUrl = `redis://${process.env.REDIS_PASSWORD ? `:${process.env.REDIS_PASSWORD}@` : ''}${process.env.REDIS_HOST}:${process.env.REDIS_PORT || 6379}`;
+    const redisUrl = process.env.REDIS_URL;
     const pubClient = createClient({ url: redisUrl });
     const subClient = pubClient.duplicate();
 
     await Promise.all([pubClient.connect(), subClient.connect()]);
     io.adapter(createAdapter(pubClient, subClient));
-    logger.info('✅ Redis adapter activé — scalabilité multi-instance OK');
+    logger.info('Redis adapter activé — scalabilité multi-instance OK');
   } catch (err) {
-    logger.error('❌ Erreur connexion Redis adapter:', err.message);
+    logger.error('Erreur connexion Redis adapter:', err.message);
     logger.warn('Le serveur continue en mode mono-instance');
   }
 }
