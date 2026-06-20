@@ -98,7 +98,7 @@ async function bootstrap() {
   await setupRedisAdapter();
   initSocket(io);
 
-  server.listen(PORT, '0.0.0.0', () => {
+  server.listen(PORT, '::', () => {
     logger.info(`
 ╔══════════════════════════════════════════════════════╗
 ║         CarEasy — Serveur Temps Réel                 ║
